@@ -61,3 +61,10 @@ export const SPOTS: Spot[] = [
 export function spotById(id: string | undefined): Spot {
   return SPOTS.find((s) => s.id === id) ?? SPOTS[0];
 }
+
+/** 地点名・地域の部分一致で SPOTS を絞る。空（空白だけも）なら全地点。ひらがな・全角半角の違いは扱わない */
+export function searchSpots(query: string | undefined): Spot[] {
+  const q = (query ?? "").trim();
+  if (q === "") return SPOTS;
+  return SPOTS.filter((s) => s.name.includes(q) || s.area.includes(q));
+}

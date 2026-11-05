@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requestTime } from "@/lib/clock";
 import { HOUR, dayAlmanac, hm, jpDay, startOfJstDay, tideLevel, tideStage, type DayAlmanac } from "@/lib/almanac";
 import { PRICE_YEN } from "@/lib/plan";
-import { spotById } from "@/lib/spots";
+import { SPOTS, searchSpots, spotById } from "@/lib/spots";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TideChart } from "@/components/TideChart";
@@ -14,11 +14,20 @@ function bestOf(a: DayAlmanac) {
   return a.windows.reduce((m, w) => (w.score > m.score ? w : m), a.windows[0]);
 }
 
-export default async function Home() {
+type SearchParams = { [key: string]: string | string[] | undefined };
+
+function first(v: string | string[] | undefined): string | undefined {
+  return Array.isArray(v) ? v[0] : v;
+}
+
+export default async function Home({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const params = await searchParams;
+  const q = (first(params.q) ?? "").trim();
+  const found = searchSpots(q);
   const now = await requestTime();
   const today = startOfJstDay(now);
   const tomorrow = today + 24 * HOUR;
-  const home = spotById("jogashima");
+  const home = spotById(first(params.spot));
   const a = dayAlmanac(home, today);
   const stage = tideStage(home, now);
   const level = Math.round(tideLevel(home, now));
@@ -93,6 +102,41 @@ export default async function Home() {
 
           {/* 今日の暦 */}
           <div className={`wrap ${s.today}`}>
+            <section className={s.finder} aria-labelledby="finder-title">
+              <h2 id="finder-title" className={s.finderTitle}>
+                地点を探す
+              </h2>
+              <form method="get" action="/" role="search" className={s.finderForm}>
+                <input type="hidden" name="spot" value={home.id} />
+                <label htmlFor="spot-q" className={s.finderLabel}>
+                  地点名・地域
+                </label>
+                <input id="spot-q" name="q" type="search" defaultValue={q} placeholder="例：江の島、神奈川" className={s.finderInput} autoComplete="off" />
+                <button type="submit" className="btn btnGhost">
+                  探す
+                </button>
+              </form>
+              <p className={s.finderCount} role="status">
+                {q === "" ? `見本の${SPOTS.length}地点` : found.length > 0 ? `「${q}」に合う地点 ${found.length}件` : ""}
+              </p>
+              {found.length > 0 ? (
+                <ul className={s.finderList}>
+                  {found.map((sp) => {
+                    const href = q === "" ? `/?spot=${sp.id}` : `/?spot=${sp.id}&q=${encodeURIComponent(q)}`;
+                    return (
+                      <li key={sp.id}>
+                        <Link href={href} className={s.finderItem} aria-current={sp.id === home.id ? "true" : undefined}>
+                          <b>{sp.name}</b>
+                          <small>{sp.area}</small>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className={s.finderEmpty}>「{q}」に合う地点は見つかりませんでした。地点名か地域（例：神奈川）を短く入れてみてください。</p>
+              )}
+            </section>
             <div className={s.todayHead}>
               <h2 className={s.todayTitle}>
                 今日の暦 <span className="num">{jpDay(today)}</span>
