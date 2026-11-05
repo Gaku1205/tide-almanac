@@ -250,9 +250,13 @@
   .days {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2px;
   }
+  /* 鍵つきの「10日」（文字＋鍵 12px）も 390px の 1 マスに収める */
   .day {
     min-width: 0;
-    padding: 0 4px;
+    padding: 0 2px;
+    gap: 2px;
+    font-size: 13px;
   }
 }

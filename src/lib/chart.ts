@@ -44,3 +44,73 @@ export function band(f: Frame, start: number, end: number): { x: number; w: numb
   const b = Math.max(0, Math.min(f.w, x(f, end)));
   return { x: r(a), w: r(Math.max(0, b - a)) };
 }
+
+/* ---- スマホ（390px 幅）の札の置き場所。幅は図の幅に対する % で、390px 幅の図（約 350px）を基準にする ---- */
+export type Span = { a: number; b: number };
+
+/** 満潮・干潮の札（丸＋時刻）が占める横の範囲。端では内側へ寄せて置く（TideChart の alignL / alignR と同じ） */
+export function extSpan(left: number): Span {
+  const half = 8;
+  if (left < 7) return { a: left, b: left + 2 * half };
+  if (left > 93) return { a: left - 2 * half, b: left };
+  return { a: left - half, b: left + half };
+}
+
+const NOW_TAG_W = 22; // 「いま 18:08」の札（線の横 6px から）
+const NOW_LINE_HALF = 3; // 「いま」の線と点
+const JIAI_HALF = 14; // 「時合い 並」の札の半分
+const GAP = 2;
+
+export type MobileTags = {
+  /** 「いま」の札：線の右、左、または省く */
+  nowTag: "right" | "left" | "none";
+  /** 「時合い」の札を置く段と、中心の位置（%）。置けなければ null */
+  jiai: { row: "top" | "bottom"; left: number } | null;
+};
+
+const clear = (a: Span, b: Span) => a.b + GAP <= b.a || b.b + GAP <= a.a;
+
+/**
+ * 640px 以下で、曲線の上の札が重ならない置き方を決める。
+ * 満潮・干潮の札は常に出す。「いま」の札は、干潮の札（下）と近ければ反対側に、どちらも近ければ省く。
+ * 「時合い」の札は、満潮の札（上）か干潮・「いま」の札（下）に重ならない段へ置き、「いま」の線を避けて横にずらす。
+ */
+export function mobileTags(input: { highs: number[]; lows: number[]; now: number | null; best: number | null }): MobileTags {
+  const highs = input.highs.map(extSpan);
+  const lows = input.lows.map(extSpan);
+
+  let nowTag: MobileTags["nowTag"] = "none";
+  let nowTagSpan: Span | null = null;
+  const line: Span | null = input.now === null ? null : { a: input.now - NOW_LINE_HALF, b: input.now + NOW_LINE_HALF };
+  if (input.now !== null) {
+    const right: Span = { a: input.now, b: input.now + NOW_TAG_W };
+    const left: Span = { a: input.now - NOW_TAG_W, b: input.now };
+    if (right.b <= 100 && lows.every((l) => clear(right, l))) {
+      nowTag = "right";
+      nowTagSpan = right;
+    } else if (left.a >= 0 && lows.every((l) => clear(left, l))) {
+      nowTag = "left";
+      nowTagSpan = left;
+    }
+  }
+
+  if (input.best === null) return { nowTag, jiai: null };
+  const best = input.best;
+
+  const place = (row: "top" | "bottom"): number | null => {
+    const obstacles: Span[] = [...(row === "top" ? highs : lows)];
+    if (line) obstacles.push(line);
+    if (row === "bottom" && nowTagSpan) obstacles.push(nowTagSpan);
+    const fits = (c: number) => c >= JIAI_HALF && c <= 100 - JIAI_HALF && obstacles.every((o) => clear({ a: c - JIAI_HALF, b: c + JIAI_HALF }, o));
+    const candidates = [best, ...obstacles.flatMap((o) => [o.a - GAP - JIAI_HALF, o.b + GAP + JIAI_HALF])].filter(fits);
+    if (candidates.length === 0) return null;
+    return candidates.reduce((m, c) => (Math.abs(c - best) < Math.abs(m - best) ? c : m));
+  };
+  let pick: { row: "top" | "bottom"; left: number } | null = null;
+  for (const row of ["bottom", "top"] as const) {
+    const c = place(row);
+    if (c === null) continue;
+    if (!pick || Math.abs(c - best) < Math.abs(pick.left - best) - 0.5) pick = { row, left: c };
+  }
+  return { nowTag, jiai: pick };
+}
