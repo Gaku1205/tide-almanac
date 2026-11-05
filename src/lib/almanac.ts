@@ -17,7 +17,11 @@ export type Spot = {
   area: string;
   lat: number;
   lon: number;
-  /** 平均の潮位（cm。最低水面から） */
+  /** 調和定数を取った観測点の名前（出典の表の地点名） */
+  station: string;
+  /** 観測点の経度（東経・度）。気象庁の遅角 κ を G = κ − p·λ に直すのに使う */
+  stationLon: number;
+  /** 平均の潮位（cm。潮位表基準面から） */
   msl: number;
   harmonics: Harmonics;
 };
@@ -68,11 +72,15 @@ function args(ms: number) {
   const T = 15 * utcHours + 180;
   const s = 218.3165 + 13.17639648 * D;
   const h = 280.4661 + 0.98564736 * D;
+  // 月の昇交点黄経 N による振幅の補正 f と位相の補正 u（度）
+  const N = (125.0445 - 0.05295377 * D) * RAD;
+  const cN = Math.cos(N);
+  const sN = Math.sin(N);
   return {
-    M2: 2 * T - 2 * s + 2 * h,
-    S2: 2 * T,
-    K1: T + h + 90,
-    O1: T - 2 * s + h - 90,
+    M2: { v: 2 * T - 2 * s + 2 * h, f: 1.0004 - 0.0373 * cN, u: -2.14 * sN, p: 2 },
+    S2: { v: 2 * T, f: 1, u: 0, p: 2 },
+    K1: { v: T + h - 90, f: 1.006 + 0.115 * cN, u: -8.86 * sN, p: 1 },
+    O1: { v: T - 2 * s + h + 90, f: 1.009 + 0.187 * cN, u: 10.8 * sN, p: 1 },
   };
 }
 
@@ -81,7 +89,12 @@ export function tideLevel(spot: Spot, ms: number): number {
   const a = args(ms);
   const H = spot.harmonics;
   let v = spot.msl;
-  for (const k of ["M2", "S2", "K1", "O1"] as const) v += H[k].amp * Math.cos((a[k] - H[k].phase) * RAD);
+  for (const k of ["M2", "S2", "K1", "O1"] as const) {
+    const c = a[k];
+    // 気象庁の遅角 κ を、観測点の経度 λ で G = κ − p·λ に直す
+    const G = H[k].phase - c.p * spot.stationLon;
+    v += c.f * H[k].amp * Math.cos((c.v + c.u - G) * RAD);
+  }
   return v;
 }
 

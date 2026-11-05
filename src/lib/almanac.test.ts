@@ -65,12 +65,38 @@ describe("潮位", () => {
     expect(ex.length).toBeGreaterThanOrEqual(3);
     for (let i = 1; i < ex.length; i++) expect(ex[i].kind).not.toBe(ex[i - 1].kind);
   });
-  it("有明海は、能登より潮の幅がずっと大きい", () => {
+  it("有明海（大浦）は、油壺の観測点を使う城ヶ島より潮の幅が3倍以上大きい（大潮の日）", () => {
+    const spring = jstDayStart(2026, 11, 10);
     const span = (id: string) => {
-      const a = dayAlmanac(spotById(id), day);
+      const a = dayAlmanac(spotById(id), spring);
       return a.range.hi - a.range.lo;
     };
-    expect(span("oura")).toBeGreaterThan(span("wajima") * 5);
+    expect(span("oura")).toBeGreaterThan(span("jogashima") * 3);
+  });
+  it("気象庁の潮位表（油壺）の公表時刻と、大潮の日の満潮・干潮が±40分以内で合う", () => {
+    // 出典：気象庁 潮位表 油壺（Z1）2026年、日本時間。小潮の日は4分潮だけでは大きくずれるので使わない
+    const published: [number, number, string[], string[]][] = [
+      [10, 27, ["5:29", "16:34"], ["11:01", "23:23"]],
+      [11, 8, ["4:18", "15:25"], ["9:48", "22:11"]],
+      [11, 10, ["5:37", "16:15"], ["10:54", "23:12"]],
+      [11, 24, ["4:48", "15:26"], ["10:05", "22:30"]],
+    ];
+    const TOLERANCE = 40 * MINUTE;
+    const toMs = (d0: number, s: string) => {
+      const [h, m] = s.split(":").map(Number);
+      return d0 + h * HOUR + m * MINUTE;
+    };
+    for (const [mo, d, highs, lows] of published) {
+      const d0 = jstDayStart(2026, mo, d);
+      const ex = extremes(jogashima, d0 - 3 * HOUR, d0 + 27 * HOUR);
+      for (const [kind, list] of [["high", highs], ["low", lows]] as const) {
+        for (const s of list) {
+          const want = toMs(d0, s);
+          const near = ex.filter((e) => e.kind === kind).reduce((a, b) => (Math.abs(b.t - want) < Math.abs(a.t - want) ? b : a));
+          expect(Math.abs(near.t - want), `${mo}/${d} ${kind} ${s}`).toBeLessThanOrEqual(TOLERANCE);
+        }
+      }
+    }
   });
   it("満潮の直後は下げ、干潮の直後は上げ", () => {
     const ex = extremes(jogashima, day, day + 24 * HOUR);

@@ -61,14 +61,14 @@ export default async function MinePage({ searchParams }: { searchParams: Promise
                 <h2 className={s.h3}>どの磯へ行くか、前の晩に決まる。</h2>
                 <CompareBoard spotIds={shown} dayStart={tomorrow} />
                 {shown.length === 1 ? <p className={s.single}>地点を足すと、強い順に並べて比べられます。</p> : null}
-                <p className={s.estimate}>※ 潮位は推算値。天文の計算で求めた値で、気圧や風による差は含みません。</p>
+                <p className={s.estimate}>※ 潮位は推算値。気象庁の調和定数から推算した値で、気圧や風による差は含みません。</p>
               </section>
             ) : null
           ) : first ? (
             <section className={s.days}>
               <DayBlock a={dayAlmanac(first, today)} now={now} />
               <DayBlock a={dayAlmanac(first, tomorrow)} now={now} />
-              <p className={s.estimate}>※ 潮位は推算値。天文の計算で求めた値で、気圧や風による差は含みません。</p>
+              <p className={s.estimate}>※ 潮位は推算値。気象庁の調和定数から推算した値で、気圧や風による差は含みません。</p>
               <div className={s.upsell}>
                 <p>有料プランなら、12地点まで登録して、明日の時合いを強い順に比べられます。</p>
                 <Link href="/pricing" className="btn btnGhost">
