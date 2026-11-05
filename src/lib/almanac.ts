@@ -17,8 +17,12 @@ export type Spot = {
   area: string;
   lat: number;
   lon: number;
-  /** 平均の潮位（cm。最低水面から） */
+  /** 平均の潮位（cm。気象庁の「MSL−潮位表基準面」） */
   msl: number;
+  /** 調和定数を取った観測点の名前（釣り場とは別の場所のことがある） */
+  station: string;
+  /** 観測点の経度（東経・度）。気象庁の遅角 κ を G = κ − p·λ に直すのに使う */
+  stationLon: number;
   harmonics: Harmonics;
 };
 
@@ -61,18 +65,24 @@ function daysJ2000(ms: number): number {
   return (ms - Date.UTC(2000, 0, 1, 12)) / DAY;
 }
 
-/** 天文の引数（度）。T＝平均太陽の時角、s＝月の平均黄経、h＝太陽の平均黄経 */
+/** 分潮ごとの p（1日あたりの周期の数）。遅角 κ から G = κ − p·λ を出すのに使う */
+const P = { M2: 2, S2: 2, K1: 1, O1: 1 } as const;
+
+/** 天文の引数 v と交点補正 f・u（度）。T＝平均太陽の時角、s＝月の平均黄経、h＝太陽の平均黄経、N＝月の昇交点黄経 */
 function args(ms: number) {
   const D = daysJ2000(ms);
   const utcHours = ((ms % DAY) + DAY) % DAY / HOUR;
   const T = 15 * utcHours + 180;
   const s = 218.3165 + 13.17639648 * D;
   const h = 280.4661 + 0.98564736 * D;
+  const N = (125.0445 - 0.05295377 * D) * RAD;
+  const cosN = Math.cos(N);
+  const sinN = Math.sin(N);
   return {
-    M2: 2 * T - 2 * s + 2 * h,
-    S2: 2 * T,
-    K1: T + h + 90,
-    O1: T - 2 * s + h - 90,
+    M2: { v: 2 * T - 2 * s + 2 * h, f: 1.0004 - 0.0373 * cosN, u: -2.14 * sinN },
+    S2: { v: 2 * T, f: 1, u: 0 },
+    K1: { v: T + h - 90, f: 1.006 + 0.115 * cosN, u: -8.86 * sinN },
+    O1: { v: T - 2 * s + h + 90, f: 1.009 + 0.187 * cosN, u: 10.8 * sinN },
   };
 }
 
@@ -81,7 +91,10 @@ export function tideLevel(spot: Spot, ms: number): number {
   const a = args(ms);
   const H = spot.harmonics;
   let v = spot.msl;
-  for (const k of ["M2", "S2", "K1", "O1"] as const) v += H[k].amp * Math.cos((a[k] - H[k].phase) * RAD);
+  for (const k of ["M2", "S2", "K1", "O1"] as const) {
+    const G = H[k].phase - P[k] * spot.stationLon;
+    v += a[k].f * H[k].amp * Math.cos((a[k].v + a[k].u - G) * RAD);
+  }
   return v;
 }
 

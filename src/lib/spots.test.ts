@@ -16,7 +16,7 @@ describe("searchSpots", () => {
     expect(searchSpots("千葉").map((s) => s.id)).toEqual(["sunosaki"]);
   });
   it("前後の空白は無視する", () => {
-    expect(searchSpots(" 輪島 ").map((s) => s.id)).toEqual(["wajima"]);
+    expect(searchSpots(" 串本 ").map((s) => s.id)).toEqual(["kushimoto"]);
   });
   it("0件なら空の配列", () => {
     expect(searchSpots("北海道")).toEqual([]);
