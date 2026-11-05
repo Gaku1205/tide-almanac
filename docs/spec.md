@@ -18,7 +18,7 @@
 ## 無料と有料
 
 - 無料でできること：地点を1つ登録（`MAX_SPOTS_FREE`）／登録した地点の今日と明日の潮汐曲線・満潮と干潮・日の出入り・時合い
-- 有料プラン（月額）でできること：地点を12地点まで登録（`MAX_SPOTS_PRO`）／登録した地点の「明日」の時合いを強い順に並べた比較の表。通知の設定（下の「通知」）。通知の実際の送信と30日先の暦は別の作業（まだ無い）
+- 有料プラン（月額）でできること：地点を12地点まで登録（`MAX_SPOTS_PRO`）／登録した地点の「明日」の時合いを強い順に並べた比較の表。通知の設定と、メールでの通知の送信（下の「通知の設定」）。30日先の暦は別の作業（まだ無い）
 - 上限の数は `src/lib/saved-spots.ts` の定数で持ち、`PLAN_ROWS` の「保存できる地点」と同じ値にする
 
 ## 画面
@@ -40,11 +40,16 @@
 - 設定は `public.notification_settings` 表（`supabase/migrations/0003_notification_settings.sql`、RLS で自分の行だけ）に1人1行で持つ。保存は Server Action（`src/app/account/actions.ts`）。最初に `getViewer()` で `user` と `pro` をサーバーで確かめ、無料・未ログインは断る（未ログインは `/login`、無料は `/account?n=pro`）。しきい値は `parseThreshold`（0〜200 の整数以外は保存せず `/account?n=invalid`）。保存できたら `/account?n=saved`、DB の失敗は `n=fail`
 - 無料には設定フォームを出さず、有料プラン（`/pricing`）の案内を出す。有料が切れた人の保存済みの設定は消さない（画面には出さない）
 - 送る時刻の決め方（`src/lib/notifications.ts` の `planNotifications(spot, date, settings, now)`。純粋な関数。時刻はすべて日本時間）
-  - `date`＝知らせる日（「明日」）の JST 0時。通知の対象の地点は呼ぶ側が渡す（地点の保存との接続と実際の送信は別の作業）
+  - `date`＝知らせる日（「明日」）の JST 0時。通知の対象の地点は呼ぶ側が渡す（送信は下の「送信の決まり」）
   - 時合いの通知：`jiaiWindows` の時合いについて、前の晩21時（`date` の前日21:00）にいちばん強い時合いを1通、時合いごとに開始の90分前（日付をまたぐことがある）に1通
   - 干潮の通知：`date` の 0時〜正午の干潮（`extremes`）の潮位がしきい値を**下回る**（同じ値は含まない）とき、前の晩21時に1通
   - 設定が off の種類は返さない。送る時刻が `now` より前の物も返さない。結果は送る時刻の早い順
-- 送る処理・定期実行・送信の履歴はこの作業に含まない
+- 送信の決まり（メールだけ。`src/lib/notify-run.ts`・`src/lib/mailer.ts`・`src/lib/notification-mail.ts`）
+  - 定期実行：`vercel.json` の cron が 15 分おきに `GET /api/notify` を呼ぶ。`Authorization: Bearer ${CRON_SECRET}` が合わなければ 401。`CRON_SECRET`・`EMAIL_API_KEY`・`EMAIL_FROM`・Supabase の鍵のどれかが無いときは、何もせず 200（`{ skipped: true }`）で終わる
+  - 対象：`notification_settings` で on の種類がある会員のうち、**いま有料**の会員（`subscriptions` 表と `isPro`）。無料に戻った会員には送らない（保存済みの設定は消さない）。地点は会員が `saved_spots` に登録した全地点
+  - 選び方：今日と明日（JST 0時）それぞれで `planNotifications` を呼び、送る時刻が「前回の実行から今回まで」（今回の 15 分前以上・今回より前）の物だけ送る。90 分前の通知は日付をまたぐことがあるので、今日の分も見る
+  - 二重送信の防止：送る前に `public.notification_log` 表（`supabase/migrations/0004_notification_log.sql`）へ `(user_id, spot_id, kind, send_at)` を書く。一意制約に当たった（もう書いてある）物は送らない。送るのに失敗したら記録を消す。この表は `supabaseAdmin()` だけが読み書きする（RLS 有効、一般の policy なし）
+  - 宛先は会員のメールアドレス（`auth.users`）。配信は Resend の HTTP API（`EMAIL_API_KEY`・`EMAIL_FROM`）。件名と本文は日本語で、潮位には「推算値」と書き添える
 
 ### トップ（`/`）の地点の探し方・選び方
 
