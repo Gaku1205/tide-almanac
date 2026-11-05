@@ -21,6 +21,12 @@
 .plot {
   position: relative;
   width: 100%;
+  aspect-ratio: var(--ar);
+}
+@media (max-width: 640px) {
+  .plot {
+    aspect-ratio: var(--ar-sm);
+  }
 }
 .svg {
   position: absolute;
@@ -39,12 +45,26 @@
   stroke: var(--grid);
   stroke-width: 1;
 }
+/* 時合いの濃さ（docs/design.md「色」の表の下）。強 22%・並 13%・弱 6%、上端の線は 100%・60%・30% */
 .jiai {
   fill: var(--shu);
-  opacity: 0.16;
+  opacity: 0.13;
 }
 .jiaiTop {
   fill: var(--shu);
+  opacity: 0.6;
+}
+.strong .jiai {
+  opacity: 0.22;
+}
+.strong .jiaiTop {
+  opacity: 1;
+}
+.weak .jiai {
+  opacity: 0.06;
+}
+.weak .jiaiTop {
+  opacity: 0.3;
 }
 .tideInk {
   color: var(--ink);
@@ -78,7 +98,7 @@
   pointer-events: none;
 }
 .ext b {
-  font: 700 14px/1 var(--font-head);
+  font: 700 14px/1 var(--font-body);
   width: 24px;
   height: 24px;
   display: grid;
@@ -120,8 +140,8 @@
   background: var(--shu-fill);
   color: #fff;
   font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   padding: 3px 10px;
   border-radius: 999px;
   white-space: nowrap;
@@ -205,6 +225,11 @@
 }
 
 @media (max-width: 640px) {
+  /* 狭い幅では、満潮の札と重ならないよう図の下端に */
+  .jiaiTag {
+    top: auto;
+    bottom: 28px;
+  }
   .axis > span:nth-child(even):not(.sun) {
     display: none;
   }

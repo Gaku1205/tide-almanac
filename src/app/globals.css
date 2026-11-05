@@ -16,7 +16,6 @@
   --moon: #f4f1e8;
   --haze: #9aa8b6;
 
-  --font-head: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
   --font-body: var(--font-gothic), "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
   --font-num: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 
@@ -50,6 +49,8 @@ body {
 h1,
 h2,
 h3 {
+  font-weight: 700;
+  letter-spacing: 0;
   word-break: auto-phrase;
   text-wrap: balance;
 }
@@ -100,8 +101,8 @@ a {
   min-height: 52px;
   padding: 0 26px;
   border-radius: 999px;
-  font: 500 15px/1 var(--font-body);
-  letter-spacing: 0.06em;
+  font: 700 15px/1 var(--font-body);
+  letter-spacing: 0.02em;
   text-decoration: none;
   cursor: pointer;
   border: 1px solid transparent;

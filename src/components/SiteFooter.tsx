@@ -14,7 +14,7 @@ export function SiteFooter() {
               <small>潮汐暦</small>
             </span>
           </span>
-          <p>潮と光が重なる刻を、前の晩に。</p>
+          <p>釣り人と海辺の撮影者のための潮汐暦</p>
         </div>
         <nav className={s.footNav} aria-label="下のメニュー">
           <Link href="/">トップ</Link>

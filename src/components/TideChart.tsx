@@ -1,5 +1,6 @@
 import { HOUR, hm, tideLevel, type DayAlmanac } from "@/lib/almanac";
 import { areaPath, band, frameFor, linePath, pct } from "@/lib/chart";
+import { strengthKey, strengthOf } from "@/lib/strength";
 import s from "./TideChart.module.css";
 
 type Props = {
@@ -11,6 +12,8 @@ type Props = {
   labels?: boolean;
   /** 図の高さの比（幅に対して） */
   ratio?: number;
+  /** 640px 以下の幅での高さの比（無ければ ratio と同じ） */
+  ratioSm?: number;
   /** 下の時刻の目盛りを出すか */
   axis?: boolean;
   title?: string;
@@ -18,7 +21,7 @@ type Props = {
   domain?: { lo: number; hi: number };
 };
 
-export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, axis = true, title, domain }: Props) {
+export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, ratioSm, axis = true, title, domain }: Props) {
   const from = a.dayStart;
   const to = a.dayStart + 24 * HOUR;
   const f = frameFor(domain ? [{ t: from, h: domain.lo }, { t: to, h: domain.hi }] : a.series, from, to);
@@ -39,7 +42,10 @@ export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, 
 
   return (
     <figure className={`${s.chart} ${tone === "paper" ? s.paper : s.night}`} role="img" aria-label={label}>
-      <div className={s.plot} style={{ aspectRatio: `${1 / ratio}` }}>
+      <div
+        className={s.plot}
+        style={{ "--ar": `${1 / ratio}`, "--ar-sm": `${1 / (ratioSm ?? ratio)}` } as React.CSSProperties}
+      >
         <svg viewBox={`0 0 ${f.w} ${f.h}`} preserveAspectRatio="none" className={s.svg} aria-hidden="true">
           <defs>
             <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
@@ -57,7 +63,7 @@ export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, 
           {a.windows.map((w) => {
             const b = band(f, w.start, w.end);
             return (
-              <g key={w.start}>
+              <g key={w.start} className={s[strengthKey(w.score)]}>
                 <rect className={s.jiai} x={b.x} y="0" width={b.w} height={f.h} />
                 <rect className={s.jiaiTop} x={b.x} y="0" width={b.w} height="5" />
               </g>
@@ -85,7 +91,7 @@ export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, 
 
         {labels && best ? (
           <span className={s.jiaiTag} style={{ left: `${pct(f, (best.start + best.end) / 2).left}%` }}>
-            時合い <span className="num">{best.score}</span>
+            時合い {strengthOf(best.score)}
           </span>
         ) : null}
 

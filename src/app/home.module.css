@@ -1,983 +1,267 @@
-.cover {
-  object-fit: cover;
-}
-
-/* ---------- 夜の章 ---------- */
-.hero {
-  position: relative;
-  overflow: hidden;
-  background: radial-gradient(120% 80% at 80% 0%, #15304a 0%, var(--night) 55%) var(--night);
-  padding: 136px 0 96px;
-}
-.heroGrid {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 0 24px;
-  align-items: end;
-}
-.heroText {
-  grid-column: 1 / span 7;
-  padding-bottom: 24px;
-}
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 28px;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  color: var(--haze);
-}
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--shu);
-  box-shadow: 0 0 0 4px rgba(226, 80, 47, 0.2);
-}
-.h1 {
-  margin: 0;
-  font: 700 clamp(44px, 7.4vw, 104px) / 1.18 var(--font-head);
-  letter-spacing: 0.04em;
+/* トップ（docs/design.md「今日の暦」「時合いの帯」「暦の読み方」「明日以降」）。夜の面に、罫線と余白で区切る */
+.main {
+  background: var(--night);
   color: var(--moon);
-}
-.h1Shu {
-  color: var(--shu);
-  position: relative;
-}
-.lead {
-  margin: 36px 0 0;
-  max-width: 34em;
-  font-size: 16px;
-  line-height: 2;
-  color: #c9d2db;
-}
-.ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 40px;
+  padding-bottom: 96px;
 }
 
-.heroPhoto {
-  grid-column: 8 / span 5;
-  position: relative;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--night-deep);
-}
-.heroShade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(11, 26, 42, 0) 40%, rgba(7, 17, 28, 0.88) 100%);
-}
-.nowCard {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
-  display: grid;
-  gap: 0;
-  border-radius: 14px;
-  background: rgba(7, 17, 28, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(244, 241, 232, 0.14);
-}
-.nowRow,
-.nextRow {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: baseline;
-  gap: 4px 14px;
-  padding: 14px 18px;
-}
-.nextRow {
-  border-top: 1px solid rgba(244, 241, 232, 0.12);
-  grid-template-columns: auto 1fr;
-}
-.nowLabel {
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: var(--haze);
-}
-.nowStage {
-  font: 700 22px/1.2 var(--font-head);
-  letter-spacing: 0.08em;
-}
-.nowLevel {
-  font-size: 24px;
-  color: var(--tide);
-}
-.nowLevel small {
-  font-size: 13px;
-  margin-left: 2px;
-}
-.nextTime {
-  font-size: 28px;
-  font-weight: 500;
-  color: var(--shu);
-  line-height: 1.2;
-}
-.nextWhy {
-  grid-column: 2;
-  font-size: 14px;
-  color: var(--moon);
-}
-
-/* 今日の暦 */
+/* 選んだ日の暦 */
 .today {
-  position: relative;
-  margin-top: 88px;
+  padding-top: 24px;
 }
-/* 地点を探す */
-.finder {
-  margin-bottom: 56px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--night-line);
-}
-.finderTitle {
-  margin: 0 0 20px;
-  font: 700 22px/1.4 var(--font-head);
-  letter-spacing: 0.1em;
-}
-.finderForm {
+.head {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-}
-.finderLabel {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
-.finderInput {
-  flex: 1 1 260px;
-  max-width: 480px;
-  height: 52px;
-  padding: 0 18px;
-  border: 1px solid var(--haze);
-  border-radius: 12px;
-  background: transparent;
-  color: var(--moon);
-  font: 400 16px/1 var(--font-body);
-}
-.finderInput::placeholder {
-  color: var(--haze);
-}
-.finderInput:focus-visible {
-  outline: none;
-  border-color: var(--moon);
-  box-shadow: 0 0 0 3px rgba(226, 80, 47, 0.35);
-}
-.finderCount {
-  margin: 16px 0 0;
-  min-height: 1.6em;
-  font-size: 14px;
-  color: var(--haze);
-}
-.finderList {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  column-gap: 40px;
-}
-.finderItem {
-  display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 4px;
-  border-bottom: 1px solid var(--night-line);
-  color: var(--moon);
-  text-decoration: none;
+  gap: 4px 16px;
 }
-.finderItem b {
-  font: 700 18px/1.4 var(--font-head);
-  letter-spacing: 0.06em;
-}
-.finderItem small {
-  font-size: 14px;
-  color: var(--haze);
-}
-.finderItem:hover b,
-.finderItem[aria-current="true"] b {
-  color: var(--tide);
-}
-.finderItem[aria-current="true"] {
-  border-bottom-color: var(--tide);
-}
-.finderItem:focus-visible {
-  outline: 2px solid var(--tide);
-  outline-offset: 2px;
-}
-.finderEmpty {
-  margin: 8px 0 0;
-  font-size: 15px;
-  color: #c9d2db;
-}
-
-.todayHead {
+.title {
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
-  justify-content: space-between;
-  gap: 20px 40px;
-  padding-bottom: 28px;
-  margin-bottom: 40px;
-  border-bottom: 1px solid var(--night-line);
+  align-items: baseline;
+  gap: 0 12px;
+  font-size: 20px;
+  line-height: 1.4;
 }
-.todayTitle {
+.title > span:first-child {
+  font-size: 24px;
+}
+.title :global(.num) {
+  font-weight: 500;
+}
+.area {
   margin: 0;
-  font: 700 28px/1.3 var(--font-head);
-  letter-spacing: 0.1em;
-}
-.todayTitle span {
-  margin-left: 12px;
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 14px;
   color: var(--haze);
-  letter-spacing: 0.04em;
 }
 .facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 36px;
-  margin: 0;
+  gap: 4px 28px;
+  margin: 12px 0 0;
 }
 .facts div {
-  display: grid;
-  gap: 2px;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
 }
 .facts dt {
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-size: 14px;
   color: var(--haze);
 }
 .facts dd {
   margin: 0;
-  font-size: 17px;
+  font-size: 18px;
 }
+.facts dd :global(.num) {
+  font-size: 18px;
+}
+
+/* 曲線の上の満潮の札が、上の並びに重ならないように */
+.chart {
+  padding-top: 40px;
+}
+
+/* 時合いの帯：濃さで強さ（docs/design.md「色」の表の下） */
 .windows {
   list-style: none;
-  margin: 28px 0 0;
+  margin: 8px 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 6px;
 }
 .windows li {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2px 12px;
-  padding: 16px 18px;
-  border: 1px solid var(--night-line);
-  border-radius: 14px;
+  grid-template-columns: 4em 150px 1fr auto;
+  align-items: center;
+  gap: 4px 16px;
+  min-height: 52px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  background: rgba(226, 80, 47, 0.13);
+  box-shadow: inset 4px 0 0 rgba(226, 80, 47, 0.6);
 }
-.windowBest {
-  border-color: var(--shu) !important;
-  background: rgba(226, 80, 47, 0.08);
+.windows li.strong {
+  background: rgba(226, 80, 47, 0.22);
+  box-shadow: inset 4px 0 0 rgb(226, 80, 47);
+}
+.windows li.weak {
+  background: rgba(226, 80, 47, 0.06);
+  box-shadow: inset 4px 0 0 rgba(226, 80, 47, 0.3);
+}
+.wLabel {
+  font-size: 14px;
+  color: var(--haze);
 }
 .wTime {
   font-size: 20px;
-}
-.wWhy {
-  grid-column: 1;
-  font-size: 14px;
-  color: var(--haze);
-}
-.wScore {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  font-size: 12px;
-  color: var(--haze);
-  text-align: right;
-}
-.wScore b {
-  display: block;
-  font-size: 26px;
-  font-weight: 500;
-  color: var(--moon);
-  line-height: 1.1;
-}
-.windowBest .wScore b {
-  color: var(--shu);
-}
-.estimate {
-  margin: 20px 0 0;
-  font-size: 14px;
-  color: var(--haze);
-}
-
-/* ---------- 紙の章 ---------- */
-.paper {
-  position: relative;
-  background: var(--paper);
-  color: var(--sumi);
-  padding: 128px 0 112px;
-  background-image: linear-gradient(90deg, rgba(28, 36, 48, 0.06) 1px, transparent 1px);
-  background-size: calc((min(100vw, 1408px) - 2 * var(--gutter)) / 4) 100%;
-  background-position: max(var(--gutter), calc((100vw - 1280px) / 2)) 0;
-}
-.readGrid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 40px 24px;
-  align-items: center;
-}
-.readHead {
-  grid-column: 1 / span 6;
-}
-.eyebrowInk,
-.eyebrowShu {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 20px;
-  font-size: 14px;
-  letter-spacing: 0.16em;
-  color: var(--sumi-soft);
-}
-.eyebrowShu {
-  color: var(--shu-deep);
-}
-.h2,
-.h2Night {
-  margin: 0;
-  font: 700 clamp(32px, 4.6vw, 60px) / 1.32 var(--font-head);
-  letter-spacing: 0.06em;
-}
-.h2Night {
-  color: var(--moon);
-}
-.body,
-.bodyNight {
-  margin: 28px 0 0;
-  max-width: 32em;
-  line-height: 2;
-}
-.body {
-  color: #3a4350;
-}
-.bodyNight {
-  color: #c9d2db;
-}
-.print {
-  grid-column: 8 / span 5;
-  margin: 0;
-}
-.printImg {
-  position: relative;
-  aspect-ratio: 1024 / 779;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 1px 0 var(--paper-shade), 0 30px 60px -30px rgba(28, 36, 48, 0.35);
-}
-.print figcaption {
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--sumi-soft);
-}
-
-.cycles {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  margin-top: 96px;
-  border-top: 1px solid var(--sumi);
-}
-.cycle {
-  position: relative;
-  padding: 32px 28px 8px 0;
-}
-.cycle + .cycle {
-  padding-left: 28px;
-  border-left: 1px solid var(--paper-shade);
-}
-.kanji {
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--sumi);
-  border-radius: 50%;
-  font: 700 18px/1 var(--font-head);
-}
-.cycle h3 {
-  margin: 20px 0 10px;
-  font: 700 22px/1.4 var(--font-head);
-  letter-spacing: 0.08em;
-}
-.cycle p {
-  margin: 0;
-  color: #3a4350;
-  line-height: 1.9;
-}
-.cycle .cycleVal {
-  margin-top: 16px;
-  font-size: 14px;
-  color: var(--tide-deep);
-}
-
-.result {
-  margin-top: 56px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 16px 32px;
-  padding: 28px 32px;
-  border-radius: var(--radius);
-  background: var(--sumi);
-  color: var(--moon);
-}
-.resultEq {
-  font: 700 44px/1 var(--font-head);
-  color: var(--shu);
-}
-.resultLabel {
-  margin: 0;
-  font-size: 14px;
-  color: var(--haze);
-  letter-spacing: 0.08em;
-}
-.resultMain {
-  margin: 4px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 20px;
-}
-.resultMain :global(.num) {
-  font-size: clamp(28px, 4vw, 44px);
-  color: var(--moon);
-}
-.resultWhy {
-  font: 600 18px/1.5 var(--font-head);
-  letter-spacing: 0.06em;
-}
-.resultScore {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-  font-size: 12px;
-  color: var(--haze);
-}
-.resultScore b {
-  display: grid;
-  place-items: center;
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  background: var(--shu-fill);
-  color: #fff;
-  font-size: 28px;
-  font-weight: 500;
-  margin-top: 6px;
-}
-
-/* 無料と有料 */
-.plans {
-  background: var(--paper-shade);
-  color: var(--sumi);
-  padding: 88px 0;
-}
-.plansGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-}
-.planPro {
-  padding-left: 48px;
-  border-left: 1px solid rgba(28, 36, 48, 0.2);
-}
-.h3 {
-  margin: 0;
-  font: 700 clamp(24px, 2.8vw, 34px) / 1.4 var(--font-head);
-  letter-spacing: 0.06em;
-}
-.ticks {
-  list-style: none;
-  margin: 24px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 10px;
-}
-.ticks li {
-  position: relative;
-  padding-left: 26px;
-  line-height: 1.8;
-  color: #2c3440;
-}
-.ticks li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 12px;
-  height: 7px;
-  border-left: 1.5px solid var(--tide-deep);
-  border-bottom: 1.5px solid var(--tide-deep);
-  transform: rotate(-45deg);
-}
-.planPro .ticks li::before {
-  border-color: var(--shu-deep);
-}
-
-/* ---------- 夜の章：有料の機能 ---------- */
-.pro {
-  background: var(--night);
-  padding: 128px 0 120px;
-}
-.proHead {
-  display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: 24px 48px;
-  align-items: end;
-  margin-bottom: 64px;
-}
-.proHead .bodyNight {
-  margin: 0;
-}
-.badge,
-.badgeInk {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--shu-fill);
-  color: #fff;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-}
-.badgeInk {
-  background: var(--sumi);
-  color: var(--paper);
-}
-
-.board {
-  border-top: 1px solid var(--moon);
-}
-.boardHead,
-.boardRow {
-  display: grid;
-  grid-template-columns: minmax(180px, 1.1fr) 3fr minmax(180px, 1fr);
-  gap: 0 32px;
-  align-items: center;
-}
-.boardHead {
-  padding: 14px 0;
-  font-size: 13px;
-  color: var(--haze);
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid var(--night-line);
-}
-.boardHours {
-  position: relative;
-  height: 1.4em;
-}
-.boardHours span {
-  position: absolute;
-  transform: translateX(-50%);
-}
-.boardHours span:first-child {
-  transform: none;
-}
-.boardHours span:last-child {
-  transform: translateX(-100%);
-}
-.boardRow {
-  padding: 18px 0;
-  border-bottom: 1px solid var(--night-line);
-}
-.boardTop {
-  background: linear-gradient(90deg, rgba(226, 80, 47, 0.1), transparent 70%);
-}
-.boardSpot {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.boardSpot b {
-  display: block;
-  font: 700 20px/1.3 var(--font-head);
-  letter-spacing: 0.08em;
-}
-.boardSpot small,
-.boardBest small {
-  display: block;
-  font-size: 13px;
-  color: var(--haze);
-}
-.rank {
-  font-size: 14px;
-  color: var(--haze);
-  padding-left: 8px;
-}
-.boardTop .rank {
-  color: var(--shu);
-}
-.boardChart {
-  display: block;
-}
-.boardBest {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 0 12px;
-}
-.boardBest > :global(.num) {
-  font-size: 20px;
-}
-.boardBest small {
-  grid-column: 1;
-}
-.boardScore {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1px solid var(--night-line);
-  font-size: 18px;
-  font-weight: 500;
-}
-.boardTop .boardScore {
-  background: var(--shu);
-  border-color: var(--shu);
-  color: #fff;
-}
-
-.notify {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 48px;
-  align-items: center;
-  margin-top: 136px;
-}
-.notifyList {
-  list-style: none;
-  margin: 36px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 0;
-  max-width: 560px;
-}
-.notifyList li {
-  display: grid;
-  grid-template-columns: 84px 1fr;
-  gap: 16px;
-  padding: 16px 0;
-  border-top: 1px solid var(--night-line);
-  color: #c9d2db;
-}
-.notifyList li span {
-  color: var(--tide);
-}
-.phone {
-  justify-self: center;
-  width: min(340px, 100%);
-  min-height: 560px;
-  border-radius: 48px;
-  padding: 18px 14px 40px;
-  background: linear-gradient(170deg, #1a3a57 0%, #0e2238 45%, #2a2238 80%, #4a2a2a 100%);
-  border: 8px solid #02070d;
-  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(244, 241, 232, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.phoneTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 14px;
-  font-size: 13px;
-}
-.phoneIsland {
-  width: 84px;
-  height: 24px;
-  border-radius: 999px;
-  background: #02070d;
-}
-.phoneDate {
-  margin: 36px 0 20px;
-  text-align: center;
-  font-size: 14px;
-  color: #d7dde4;
-}
-.toast {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 12px;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(244, 241, 232, 0.9);
-  color: var(--sumi);
-}
-.toastIcon {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  background: radial-gradient(circle at 50% 56%, var(--shu) 0 34%, transparent 35%), var(--night);
-}
-.toastApp {
-  margin: 0;
-  font-size: 12px;
-  color: var(--sumi-soft);
-}
-.toastText {
-  margin: 2px 0 0;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-/* ---------- 紙の章：撮る人へ ---------- */
-.photo {
-  background: var(--paper);
-  color: var(--sumi);
-  padding: 120px 0;
-}
-.photoGrid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 40px 24px;
-  align-items: center;
-}
-.photoImg {
-  grid-column: 1 / span 5;
-  position: relative;
-  aspect-ratio: 3 / 4;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.photoText {
-  grid-column: 7 / span 6;
-}
-.moments {
-  list-style: none;
-  margin: 36px 0 0;
-  padding: 0;
-  border-top: 1px solid var(--sumi);
-}
-.moments li {
-  display: grid;
-  grid-template-columns: 1.2fr 1.1fr 1.3fr auto;
-  align-items: center;
-  gap: 8px 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--paper-shade);
-}
-.mSpot {
-  font: 700 18px/1.3 var(--font-head);
-  letter-spacing: 0.06em;
-}
-.mSpot small {
-  display: block;
-  font: 400 12px/1.5 var(--font-body);
-  color: var(--sumi-soft);
-  letter-spacing: 0;
-}
-.mTime {
-  font-size: 17px;
-}
-.mTide {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: var(--sumi-soft);
-}
-.meter {
-  flex: 1;
-  height: 6px;
-  min-width: 48px;
-  border-radius: 99px;
-  background: var(--paper-shade);
-  overflow: hidden;
-}
-.meter i {
-  display: block;
-  height: 100%;
-  background: var(--tide-deep);
-}
-.mirror,
-.noMirror {
-  font-size: 13px;
-  padding: 3px 10px;
-  border-radius: 999px;
   white-space: nowrap;
 }
-.mirror {
-  background: var(--shu-fill);
-  color: #fff;
+.wWhy {
+  font-size: 15px;
+  color: #c9d2db;
 }
-.noMirror {
-  border: 1px solid var(--paper-shade);
-  color: var(--sumi-soft);
+.wWord {
+  font-size: 16px;
+  color: var(--moon);
 }
-.small {
-  margin: 16px 0 0;
+.windows li.wNone {
+  display: block;
+  background: none;
+  box-shadow: none;
+  padding: 12px 0;
   font-size: 14px;
-  color: var(--sumi-soft);
-}
-
-/* ---------- 料金への誘い ---------- */
-.closing {
-  position: relative;
-  overflow: hidden;
-  background: var(--night);
-  padding: 136px 0;
-  text-align: center;
-}
-.closingInner {
-  position: relative;
-  display: grid;
-  justify-items: center;
-}
-.closingPrice {
-  margin: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font: 700 24px/1 var(--font-head);
   color: var(--haze);
 }
-.closingPrice b {
-  font-size: clamp(88px, 14vw, 180px);
-  font-weight: 400;
-  color: var(--moon);
-  letter-spacing: -0.02em;
-  line-height: 1;
+
+/* 暦の読み方（折りたたみ）と注記 */
+.read {
+  margin-top: 16px;
+  border-top: 1px solid var(--night-line);
+  padding-top: 8px;
 }
-.closingTitle {
-  margin: 24px 0 0;
-  font: 700 clamp(28px, 4vw, 48px) / 1.4 var(--font-head);
-  letter-spacing: 0.1em;
+.read summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 15px;
+  color: var(--tide);
+  cursor: pointer;
 }
-.closing .bodyNight {
-  margin-left: auto;
-  margin-right: auto;
+.readBody {
+  max-width: 44em;
+  font-size: 14px;
+  color: #c9d2db;
 }
-.closing .ctas {
-  justify-content: center;
+.readBody p {
+  margin: 0 0 10px;
+}
+.estimate {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--haze);
 }
 
-/* ---------- 幅ごと ---------- */
-@media (max-width: 1024px) {
-  .heroText,
-  .heroPhoto {
-    grid-column: 1 / -1;
-  }
-  .heroPhoto {
-    margin-top: 48px;
-    aspect-ratio: 4 / 3;
-  }
-  .readHead,
-  .print,
-  .photoImg,
-  .photoText {
-    grid-column: 1 / -1;
-  }
-  .photoImg {
-    aspect-ratio: 4 / 3;
-  }
-  .notify,
-  .proHead {
-    grid-template-columns: 1fr;
-  }
-  .windows {
-    grid-template-columns: 1fr;
-  }
+/* 節 */
+.section {
+  margin-top: 48px;
 }
+.h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+/* 明日以降 */
+.ahead {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+.ahead li {
+  display: flex;
+}
+.card {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--night-line);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+.card:hover {
+  border-color: var(--haze);
+}
+.cardOn,
+.cardOn:hover {
+  border-color: var(--moon);
+}
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2px 8px;
+  font-size: 14px;
+}
+.cardHead small {
+  font-size: 14px;
+  color: var(--haze);
+}
+.cardBest {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+}
+.cardBest :global(.num) {
+  font-size: 15px;
+}
+.cardLocked {
+  color: var(--haze);
+}
+.cardLocked:hover {
+  color: var(--moon);
+  border-color: var(--night-line);
+}
+.lockBox {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  min-height: 96px;
+  font-size: 14px;
+}
+
 @media (max-width: 760px) {
-  .hero {
-    padding: 112px 0 72px;
+  .main {
+    padding-bottom: 72px;
   }
-  .heroPhoto {
-    aspect-ratio: 4 / 5;
+  .today {
+    padding-top: 16px;
   }
-  .lead {
-    font-size: 15px;
+  .title {
+    font-size: 17px;
   }
-  .ctas :global(.btn) {
-    flex: 1 1 100%;
+  .title > span:first-child {
+    font-size: 20px;
   }
-  .cycles {
-    grid-template-columns: 1fr;
+  .facts {
+    gap: 2px 18px;
   }
-  .cycle,
-  .cycle + .cycle {
-    padding: 28px 0;
-    border-left: 0;
-    border-bottom: 1px solid var(--paper-shade);
-  }
-  .result {
-    grid-template-columns: 1fr auto;
-    padding: 24px;
-  }
-  .resultEq {
-    display: none;
-  }
-  .plansGrid {
-    grid-template-columns: 1fr;
-  }
-  .planPro {
-    padding: 40px 0 0;
-    border-left: 0;
-    border-top: 1px solid rgba(28, 36, 48, 0.2);
-  }
-  .boardHead {
-    display: none;
-  }
-  .boardRow {
-    grid-template-columns: 1fr auto;
-    gap: 14px 16px;
-  }
-  .boardChart {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-  .boardBest {
-    grid-column: 2;
-    grid-row: 1;
-    text-align: right;
-  }
-  .boardBest small {
-    display: none;
-  }
-  .boardScore {
-    width: 44px;
-    height: 44px;
+  .facts dd,
+  .facts dd :global(.num) {
     font-size: 16px;
   }
-  .moments li {
-    grid-template-columns: 1fr auto;
+  .windows li {
+    grid-template-columns: auto 1fr auto;
+    gap: 0 12px;
+    padding: 8px 14px;
   }
-  .mTide {
-    grid-column: 1;
+  .wWhy {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 14px;
   }
-  .paper {
-    padding: 96px 0 88px;
-    background-image: none;
+  .section {
+    margin-top: 40px;
   }
-  .pro,
-  .photo,
-  .closing {
-    padding: 96px 0;
+  .ahead {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
   }
-  .notify {
-    margin-top: 96px;
-  }
-  .phone {
-    min-height: 0;
+  .ahead li {
+    flex: 0 0 148px;
+    scroll-snap-align: start;
   }
 }

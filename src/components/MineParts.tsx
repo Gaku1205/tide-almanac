@@ -1,8 +1,10 @@
 // 「わたしの暦」の部品（登録欄・登録済みの一覧・無料の1地点の暦・有料の比較の表）
 import Link from "next/link";
-import { dayAlmanac, hm, jpDay, type DayAlmanac } from "@/lib/almanac";
+import { hm, jpDay, type DayAlmanac } from "@/lib/almanac";
+import { rankSpots } from "@/lib/home";
 import { SPOTS } from "@/lib/spots";
 import { addSpot, removeSpot } from "@/app/mine/actions";
+import { CompareTable } from "./CompareTable";
 import { TideChart } from "./TideChart";
 import s from "./mine.module.css";
 
@@ -139,50 +141,13 @@ export function DayBlock({ a, now }: { a: DayAlmanac; now: number }) {
 
 /** 有料の比較の表：登録した地点の、ある日の時合いを強い順に（トップの比較の節と同じ作り） */
 export function CompareBoard({ spotIds, dayStart }: { spotIds: string[]; dayStart: number }) {
-  const rows = SPOTS.filter((sp) => spotIds.includes(sp.id))
-    .map((sp) => dayAlmanac(sp, dayStart))
-    .map((d) => ({ d, best: bestOf(d) }))
-    .sort((x, y) => y.best.score - x.best.score);
-  if (rows.length === 0) return null;
-  const domain = { lo: Math.min(...rows.map((r) => r.d.range.lo)), hi: Math.max(...rows.map((r) => r.d.range.hi)) };
+  const rows = rankSpots(
+    SPOTS.filter((sp) => spotIds.includes(sp.id)),
+    dayStart,
+  );
   return (
-    <div className={s.board} role="table" aria-label={`${jpDay(dayStart)}の地点の比較`}>
-      <div className={s.boardHead} role="row">
-        <span role="columnheader">
-          地点 ・ <span className="num">{jpDay(dayStart)}</span>
-        </span>
-        <span role="columnheader" className={s.boardHours}>
-          {[0, 6, 12, 18, 24].map((h) => (
-            <span key={h} className="num" style={{ left: `${(h / 24) * 100}%` }}>
-              {h}
-            </span>
-          ))}
-        </span>
-        <span role="columnheader">いちばん強い時合い</span>
-      </div>
-      {rows.map(({ d, best }, i) => (
-        <div key={d.spot.id} className={`${s.boardRow} ${i === 0 ? s.boardTop : ""}`} role="row">
-          <span role="cell" className={s.boardSpot}>
-            <span className={`num ${s.rank}`}>{String(i + 1).padStart(2, "0")}</span>
-            <span>
-              <b>{d.spot.name}</b>
-              <small>
-                {d.spot.area} ・ {d.name}
-              </small>
-            </span>
-          </span>
-          <span role="cell" className={s.boardChart}>
-            <TideChart a={d} labels={false} axis={false} ratio={0.18} domain={domain} />
-          </span>
-          <span role="cell" className={s.boardBest}>
-            <span className="num">
-              {hm(best.start)}–{hm(best.end)}
-            </span>
-            <small>{best.reason}</small>
-            <b className={`num ${s.boardScore}`}>{best.score}</b>
-          </span>
-        </div>
-      ))}
+    <div className={s.boardGap}>
+      <CompareTable rows={rows} dayStart={dayStart} />
     </div>
   );
 }

@@ -1,0 +1,258 @@
+/* トップの上の帯（docs/design.md「トップの上の帯」） */
+.bar {
+  position: relative;
+  z-index: 20;
+  background: var(--night);
+  border-bottom: 1px solid var(--night-line);
+  color: var(--moon);
+}
+.inner {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  grid-template-areas: "mark picker days end";
+  align-items: center;
+  gap: 0 20px;
+  min-height: 64px;
+}
+.mark {
+  grid-area: mark;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* 地点の切り替え */
+.picker {
+  grid-area: picker;
+  position: relative;
+}
+.pickerSum {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--night-line);
+  border-radius: 8px;
+  cursor: pointer;
+  list-style: none;
+  white-space: nowrap;
+  transition: border-color 0.2s;
+}
+.pickerSum::-webkit-details-marker {
+  display: none;
+}
+.pickerSum:hover,
+.picker[open] .pickerSum {
+  border-color: var(--haze);
+}
+.pickerSum b {
+  font-size: 16px;
+}
+.pickerLabel {
+  font-size: 14px;
+  color: var(--haze);
+}
+.caret {
+  font-size: 12px;
+  color: var(--haze);
+}
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 360px;
+  padding: 16px;
+  background: var(--night-deep);
+  border: 1px solid var(--night-line);
+  border-radius: 8px;
+}
+.form {
+  display: flex;
+  gap: 8px;
+}
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--haze);
+  background: transparent;
+  color: var(--moon);
+  font: 400 16px/1.4 var(--font-body);
+}
+.input::placeholder {
+  color: var(--haze);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--moon);
+  box-shadow: 0 0 0 3px rgba(226, 80, 47, 0.35);
+}
+.go {
+  flex: none;
+  min-height: 44px;
+  padding: 0 18px;
+  white-space: nowrap;
+}
+.count {
+  margin: 10px 0 4px;
+  min-height: 1.5em;
+  font-size: 14px;
+  color: var(--haze);
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--night-line);
+  text-decoration: none;
+}
+.item b {
+  font-size: 16px;
+  color: var(--moon);
+}
+.item small {
+  font-size: 14px;
+  color: var(--haze);
+}
+.item:hover b {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.item[aria-current="true"] b {
+  color: var(--tide);
+}
+.empty {
+  margin: 0;
+  font-size: 14px;
+  color: #c9d2db;
+}
+
+/* 日付の切り替え */
+.days {
+  grid-area: days;
+  display: flex;
+  gap: 4px;
+}
+.day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 52px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--night-line);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--moon);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+.day:hover {
+  border-color: var(--haze);
+}
+.dayOn {
+  background: var(--moon);
+  border-color: var(--moon);
+  color: var(--night);
+  font-weight: 700;
+}
+.dayLocked {
+  color: var(--haze);
+}
+.dayLocked:hover {
+  color: var(--moon);
+  border-color: var(--night-line);
+}
+
+/* 右端 */
+.end {
+  grid-area: end;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.textLink {
+  font-size: 14px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.textLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.login {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 241, 232, 0.4);
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s;
+}
+.login:hover {
+  border-color: var(--moon);
+}
+
+@media (max-width: 1024px) {
+  .inner {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "mark picker end"
+      "days days days";
+    gap: 8px 16px;
+    padding-bottom: 12px;
+  }
+  .inner > .mark,
+  .inner > .end {
+    min-height: 56px;
+  }
+}
+@media (max-width: 760px) {
+  .inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "mark end"
+      "picker picker"
+      "days days";
+  }
+  .picker,
+  .pickerSum {
+    width: 100%;
+  }
+  .caret {
+    margin-left: auto;
+  }
+  .panel {
+    width: 100%;
+  }
+  .days {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .day {
+    min-width: 0;
+    padding: 0 4px;
+  }
+}
