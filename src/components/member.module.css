@@ -115,6 +115,10 @@
   color: var(--sumi);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
+.field input:global(.num) {
+  font-family: var(--font-num);
+  font-feature-settings: "tnum" 1;
+}
 .field input::placeholder {
   color: #8a8578;
 }
