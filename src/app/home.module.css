@@ -132,6 +132,98 @@
   position: relative;
   margin-top: 88px;
 }
+/* 地点を探す */
+.finder {
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--night-line);
+}
+.finderTitle {
+  margin: 0 0 20px;
+  font: 700 22px/1.4 var(--font-head);
+  letter-spacing: 0.1em;
+}
+.finderForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.finderLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.finderInput {
+  flex: 1 1 260px;
+  max-width: 480px;
+  height: 52px;
+  padding: 0 18px;
+  border: 1px solid var(--haze);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--moon);
+  font: 400 16px/1 var(--font-body);
+}
+.finderInput::placeholder {
+  color: var(--haze);
+}
+.finderInput:focus-visible {
+  outline: none;
+  border-color: var(--moon);
+  box-shadow: 0 0 0 3px rgba(226, 80, 47, 0.35);
+}
+.finderCount {
+  margin: 16px 0 0;
+  min-height: 1.6em;
+  font-size: 14px;
+  color: var(--haze);
+}
+.finderList {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  column-gap: 40px;
+}
+.finderItem {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--night-line);
+  color: var(--moon);
+  text-decoration: none;
+}
+.finderItem b {
+  font: 700 18px/1.4 var(--font-head);
+  letter-spacing: 0.06em;
+}
+.finderItem small {
+  font-size: 14px;
+  color: var(--haze);
+}
+.finderItem:hover b,
+.finderItem[aria-current="true"] b {
+  color: var(--tide);
+}
+.finderItem[aria-current="true"] {
+  border-bottom-color: var(--tide);
+}
+.finderItem:focus-visible {
+  outline: 2px solid var(--tide);
+  outline-offset: 2px;
+}
+.finderEmpty {
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: #c9d2db;
+}
+
 .todayHead {
   display: flex;
   flex-wrap: wrap;
