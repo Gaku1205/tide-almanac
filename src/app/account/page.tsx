@@ -61,6 +61,10 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             </div>
           )}
 
+          <Link href="/mine" className={s.textLinkInk}>
+            わたしの暦へ
+          </Link>
+
           <form action="/auth/signout" method="post">
             <button type="submit" className={s.link}>
               ログアウト

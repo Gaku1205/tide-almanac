@@ -222,6 +222,16 @@
   align-items: center;
 }
 
+.textLinkInk {
+  font-size: 14px;
+  color: var(--tide-deep);
+  text-underline-offset: 4px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+}
+
 @media (max-width: 900px) {
   .split {
     grid-template-columns: 1fr;

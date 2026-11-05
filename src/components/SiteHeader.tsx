@@ -21,9 +21,12 @@ export async function SiteHeader({ tone = "night" }: { tone?: "night" | "paper" 
           </Link>
           <Link href="/pricing">料金</Link>
           {viewer.user ? (
-            <Link href="/account" className={s.pill}>
-              アカウント
-            </Link>
+            <>
+              <Link href="/mine">わたしの暦</Link>
+              <Link href="/account" className={s.pill}>
+                アカウント
+              </Link>
+            </>
           ) : (
             <Link href="/login" className={s.pill}>
               ログイン
