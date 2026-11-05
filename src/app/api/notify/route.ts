@@ -1,4 +1,4 @@
-// 通知の定期実行（vercel.json の cron が15分おきに呼ぶ）。CRON_SECRET が合わない呼び出しは断る
+// 通知の定期実行（vercel.json の cron が毎日 21:00 JST に呼ぶ。Vercel の無料プランは1日1回まで）。CRON_SECRET が合わない呼び出しは断る
 import { authEnabled, serverEnv } from "@/lib/env";
 import { emailEnabled } from "@/lib/mailer";
 import { runNotify, supabaseIo } from "@/lib/notify-run";
