@@ -136,6 +136,7 @@
 .jiaiTag {
   position: absolute;
   top: 12px;
+  left: var(--l);
   transform: translateX(-50%);
   background: var(--shu-fill);
   color: #fff;
@@ -225,10 +226,28 @@
 }
 
 @media (max-width: 640px) {
-  /* 狭い幅では、満潮の札と重ならないよう図の下端に */
+  /* 狭い幅では、満潮の札と重ならないよう図の下端に。重なる札があれば横にずらし、上の段に移す（lib/chart.ts の mobileTags） */
   .jiaiTag {
     top: auto;
     bottom: 28px;
+    left: var(--l-sm);
+  }
+  .jiaiTagTop {
+    top: 12px;
+    bottom: auto;
+  }
+  .jiaiTagHide,
+  .nowTagHide {
+    display: none;
+  }
+  /* 「いま」の札は、干潮の札と近いとき線の左へ、どちらも近いとき省く */
+  .nowTagL {
+    left: auto;
+    right: 6px;
+  }
+  /* 干潮の「干」の丸（点の下に約 56px）が下の目盛りに重ならないよう、図と目盛りの間を空ける */
+  .axisLow {
+    margin-top: 44px;
   }
   .axis > span:nth-child(even):not(.sun) {
     display: none;

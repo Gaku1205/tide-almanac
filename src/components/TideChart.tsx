@@ -1,5 +1,5 @@
 import { HOUR, hm, tideLevel, type DayAlmanac } from "@/lib/almanac";
-import { areaPath, band, frameFor, linePath, pct } from "@/lib/chart";
+import { areaPath, band, frameFor, linePath, mobileTags, pct } from "@/lib/chart";
 import { strengthKey, strengthOf } from "@/lib/strength";
 import s from "./TideChart.module.css";
 
@@ -33,6 +33,14 @@ export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, 
   const showNow = now !== undefined && now >= from && now <= to;
   const nowAt = showNow ? pct(f, now, tideLevel(a.spot, now)) : null;
   const best = a.windows.reduce<DayAlmanac["windows"][number] | null>((m, w) => (!m || w.score > m.score ? w : m), null);
+  const bestLeft = best ? pct(f, (best.start + best.end) / 2).left : 0;
+  // 640px 以下での札の置き方（重なるときは動かす・省く。判定は lib/chart.ts）
+  const mobile = mobileTags({
+    highs: a.extremes.filter((e) => e.kind === "high").map((e) => pct(f, e.t, e.h).left),
+    lows: a.extremes.filter((e) => e.kind === "low").map((e) => pct(f, e.t, e.h).left),
+    now: nowAt ? nowAt.left : null,
+    best: best ? bestLeft : null,
+  });
   const label =
     title ??
     `${a.spot.name}の潮汐。満潮 ${a.extremes.filter((e) => e.kind === "high").map((e) => hm(e.t)).join("・")}、干潮 ${a.extremes
@@ -90,7 +98,10 @@ export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, 
           : null}
 
         {labels && best ? (
-          <span className={s.jiaiTag} style={{ left: `${pct(f, (best.start + best.end) / 2).left}%` }}>
+          <span
+            className={`${s.jiaiTag} ${mobile.jiai?.row === "top" ? s.jiaiTagTop : ""} ${mobile.jiai ? "" : s.jiaiTagHide}`}
+            style={{ "--l": `${bestLeft}%`, "--l-sm": `${mobile.jiai?.left ?? bestLeft}%` } as React.CSSProperties}
+          >
             時合い {strengthOf(best.score)}
           </span>
         ) : null}
@@ -98,13 +109,17 @@ export function TideChart({ a, now, tone = "night", labels = true, ratio = 0.3, 
         {nowAt ? (
           <span className={s.now} style={{ left: `${nowAt.left}%` }} aria-hidden="true">
             <span className={s.nowDot} style={{ top: `${nowAt.top}%` }} />
-            {labels ? <span className={`${s.nowTag} num`}>いま {hm(now!)}</span> : null}
+            {labels ? (
+              <span className={`${s.nowTag} ${mobile.nowTag === "left" ? s.nowTagL : ""} ${mobile.nowTag === "none" ? s.nowTagHide : ""} num`}>
+                いま {hm(now!)}
+              </span>
+            ) : null}
           </span>
         ) : null}
       </div>
 
       {axis ? (
-        <div className={s.axis} aria-hidden="true">
+        <div className={`${s.axis} ${labels ? s.axisLow : ""}`} aria-hidden="true">
           {[0, 3, 6, 9, 12, 15, 18, 21, 24].map((h) => (
             <span key={h} className="num" style={{ left: `${(h / 24) * 100}%` }}>
               {h}
