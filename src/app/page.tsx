@@ -180,7 +180,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Sea
                 </li>
               ))}
             </ul>
-            <p className={s.estimate}>※ 推算値。天文の計算で求めた潮位で、気圧や風による差は含みません。</p>
+            <p className={s.estimate}>※ 推算値（潮位は気象庁の調和定数から推算）。気圧や風による差は含みません。</p>
           </div>
         </section>
 

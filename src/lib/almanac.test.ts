@@ -65,12 +65,36 @@ describe("潮位", () => {
     expect(ex.length).toBeGreaterThanOrEqual(3);
     for (let i = 1; i < ex.length; i++) expect(ex[i].kind).not.toBe(ex[i - 1].kind);
   });
-  it("有明海は、能登より潮の幅がずっと大きい", () => {
+  it("有明海は、油壺（城ヶ島）より潮の幅がずっと大きい（3倍以上）", () => {
     const span = (id: string) => {
       const a = dayAlmanac(spotById(id), day);
       return a.range.hi - a.range.lo;
     };
-    expect(span("oura")).toBeGreaterThan(span("wajima") * 5);
+    expect(span("oura")).toBeGreaterThan(span("jogashima") * 3);
+  });
+  // 気象庁 潮位表 油壺（Z1）2026年、日本時間の大潮の日の公表値。許容は ±40 分（小潮の日は4分潮だけでは1時間以上ずれるので、大潮の日だけ）
+  it("油壺の満潮・干潮の時刻が、気象庁の公表と ±40 分以内で合う（大潮の日）", () => {
+    const published: [number, number, string[], string[]][] = [
+      [10, 27, ["5:29", "16:34"], ["11:01", "23:23"]],
+      [11, 8, ["4:18", "15:25"], ["9:48", "22:11"]],
+      [11, 10, ["5:37", "16:15"], ["10:54", "23:12"]],
+      [11, 24, ["4:48", "15:26"], ["10:05", "22:30"]],
+    ];
+    const min = (s: string) => {
+      const [h, m] = s.split(":").map(Number);
+      return h * 60 + m;
+    };
+    for (const [m, d, highs, lows] of published) {
+      const start = jstDayStart(2026, m, d);
+      const ex = extremes(jogashima, start - 3 * HOUR, start + 27 * HOUR);
+      for (const [kind, times] of [["high", highs], ["low", lows]] as const) {
+        for (const t of times) {
+          const target = start + min(t) * MINUTE;
+          const near = ex.filter((e) => e.kind === kind).reduce((a, b) => (Math.abs(b.t - target) < Math.abs(a.t - target) ? b : a));
+          expect(Math.abs(near.t - target) / MINUTE, `${m}/${d} ${kind} ${t}`).toBeLessThanOrEqual(40);
+        }
+      }
+    }
   });
   it("満潮の直後は下げ、干潮の直後は上げ", () => {
     const ex = extremes(jogashima, day, day + 24 * HOUR);
