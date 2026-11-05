@@ -232,6 +232,52 @@
   justify-self: start;
 }
 
+/* アカウントの「通知」の節（罫線で区切る。箱は作らない） */
+.notify {
+  display: grid;
+  gap: 16px;
+  border-top: 1px solid var(--sumi);
+  padding-top: 24px;
+}
+.notifyTitle {
+  margin: 0;
+  font: 700 24px/1.4 var(--font-head);
+  letter-spacing: 0.06em;
+}
+.notifyForm {
+  display: grid;
+  gap: 18px;
+}
+.check {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--paper-shade);
+  cursor: pointer;
+}
+.check input {
+  width: 24px;
+  height: 24px;
+  margin: 2px 0 0;
+  accent-color: var(--tide-deep);
+}
+.check input:focus-visible {
+  outline: 2px solid var(--sumi);
+  outline-offset: 3px;
+}
+.check span {
+  display: grid;
+  gap: 4px;
+  font-weight: 500;
+}
+.check small {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--sumi-soft);
+}
+
 @media (max-width: 900px) {
   .split {
     grid-template-columns: 1fr;
