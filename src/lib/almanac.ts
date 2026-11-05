@@ -5,6 +5,7 @@
 export const HOUR = 3_600_000;
 export const MINUTE = 60_000;
 const DAY = 24 * HOUR;
+export const DAY_MS = DAY;
 const JST = 9 * HOUR;
 const RAD = Math.PI / 180;
 
