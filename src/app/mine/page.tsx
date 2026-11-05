@@ -38,12 +38,7 @@ export default async function MinePage({ searchParams }: { searchParams: Promise
         <div className={`wrap ${s.stack}`}>
           <div className={s.manage}>
             <div>
-              <p className={s.eyebrow}>わたしの暦</p>
-              <h1 className={s.title}>
-                いつもの海を、
-                <br />
-                登録する。
-              </h1>
+              <h1 className={s.title}>わたしの暦</h1>
               <p className={s.lead}>
                 {viewer.pro
                   ? "12地点まで登録できます。登録した地点の明日の時合いを、強い順に並べて比べられます。"
@@ -56,10 +51,9 @@ export default async function MinePage({ searchParams }: { searchParams: Promise
 
           {viewer.pro && shown.length > 0 ? (
             <section>
-              <p className={s.eyebrow}>
+              <h2 className={s.h2}>
                 <span className={s.badge}>有料</span> 地点の比較
-              </p>
-              <h2 className={s.h3}>どの磯へ行くか、前の晩に決まる。</h2>
+              </h2>
               <CompareBoard spotIds={shown} dayStart={tomorrow} />
               {shown.length === 1 ? <p className={s.single}>地点を足すと、強い順に並べて比べられます。</p> : null}
             </section>
@@ -68,10 +62,9 @@ export default async function MinePage({ searchParams }: { searchParams: Promise
           {viewer.pro && shown.length > 0 ? (
             <>
               <section>
-                <p className={s.eyebrow}>
+                <h2 className={s.h2}>
                   <span className={s.badge}>有料</span> 30日先までの暦
-                </p>
-                <h2 className={s.h3}>この一か月の、潮と時合い。</h2>
+                </h2>
                 <SpotTabs ids={shown} current={current} />
                 <MonthCalendar spotId={current} today={today} />
               </section>

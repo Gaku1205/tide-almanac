@@ -1,0 +1,139 @@
+/* 比較の表（docs/design.md「比較の表」）。罫線だけ、箱を作らない */
+.board {
+  border-top: 1px solid var(--moon);
+}
+.head,
+.row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.1fr) 3fr minmax(200px, 1fr);
+  gap: 0 32px;
+  align-items: center;
+}
+.head {
+  padding: 12px 0;
+  font-size: 14px;
+  color: var(--haze);
+  border-bottom: 1px solid var(--night-line);
+}
+.hours {
+  position: relative;
+  height: 1.4em;
+}
+.hours span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+.hours span:first-child {
+  transform: none;
+}
+.hours span:last-child {
+  transform: translateX(-100%);
+}
+.row {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--night-line);
+}
+.top {
+  background: linear-gradient(90deg, rgba(226, 80, 47, 0.1), transparent 70%);
+}
+.spot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.spot b {
+  display: block;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.spot small,
+.best small {
+  display: block;
+  font-size: 14px;
+  color: var(--haze);
+}
+.rank {
+  font-size: 14px;
+  color: var(--haze);
+  padding-left: 8px;
+}
+.top .rank {
+  color: var(--shu);
+}
+.chart {
+  display: block;
+}
+.best {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 12px;
+}
+.best > :global(.num) {
+  font-size: 18px;
+}
+.best small {
+  grid-column: 1;
+}
+.word {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-size: 16px;
+}
+.top .word {
+  color: var(--shu);
+}
+
+/* 鍵つきの行：順位と鍵と「有料」だけ */
+.locked {
+  min-height: 56px;
+  padding: 0;
+  color: var(--haze);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.locked:hover {
+  color: var(--moon);
+}
+.locked .rank {
+  color: inherit;
+}
+.lockText {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.more {
+  margin: 12px 0 0;
+  font-size: 14px;
+}
+.more a {
+  color: var(--tide);
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 760px) {
+  .head {
+    display: none;
+  }
+  .row {
+    grid-template-columns: 1fr auto;
+    gap: 12px 16px;
+  }
+  .chart {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .best {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: right;
+  }
+  .best small {
+    display: none;
+  }
+  .locked {
+    grid-template-columns: 1fr;
+  }
+}

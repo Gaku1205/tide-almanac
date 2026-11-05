@@ -16,9 +16,6 @@ export async function SiteHeader({ tone = "night" }: { tone?: "night" | "paper" 
           </span>
         </Link>
         <nav className={s.nav} aria-label="メイン">
-          <Link href="/#read" className={s.hideSm}>
-            暦の読み方
-          </Link>
           <Link href="/pricing">料金</Link>
           {viewer.user ? (
             <>

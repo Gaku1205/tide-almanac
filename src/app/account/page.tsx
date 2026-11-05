@@ -41,8 +41,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <SiteHeader tone="paper" />
       <main className={s.page}>
         <div className={s.pageInner}>
-          <p className={s.eyebrow}>アカウント</p>
-          <h1 className={s.title}>あなたの暦</h1>
+          <h1 className={s.title}>アカウント</h1>
           {ok === "1" && !viewer.pro ? <p className={s.note}>支払いを受け付けました。反映まで数秒かかります。少し待ってから開き直してください。</p> : null}
 
           <dl className={s.list}>

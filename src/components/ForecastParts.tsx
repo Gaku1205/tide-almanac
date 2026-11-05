@@ -74,8 +74,9 @@ export function PhotoSection({ spotId, today, pro }: { spotId: string; today: nu
   const list = pro ? photoMornings(spot, today, true) : [];
   return (
     <section aria-label="撮影の青い時間と潮の高さ">
-      <p className={s.eyebrow}>撮影 ・ {spot.name}</p>
-      <h2 className={s.h3}>空と干潟が重なる朝。</h2>
+      <h2 className={s.h2}>
+        撮影の青い時間 <small>{spot.name}</small>
+      </h2>
       {pro ? (
         list.length > 0 ? (
           <ul className={`${s.cal} ${s.photo}`}>

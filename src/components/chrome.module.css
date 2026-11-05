@@ -27,8 +27,8 @@
   letter-spacing: 0.02em;
 }
 .word small {
-  font: 600 11px/1.4 var(--font-head);
-  letter-spacing: 0.4em;
+  font: 400 11px/1.4 var(--font-body);
+  letter-spacing: 0.02em;
   opacity: 0.75;
 }
 .nav {
@@ -36,7 +36,7 @@
   align-items: center;
   gap: clamp(12px, 3vw, 32px);
   font-size: 14px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
 }
 .nav a {
   text-decoration: none;
@@ -62,14 +62,6 @@
   background: var(--sumi);
   color: var(--paper);
 }
-@media (max-width: 560px) {
-  .hideSm {
-    display: none !important;
-  }
-  .word small {
-    letter-spacing: 0.25em;
-  }
-}
 
 .footer {
   background: var(--night-deep);
@@ -86,9 +78,9 @@
   color: var(--moon);
 }
 .footBrand p {
-  margin: 18px 0 0;
-  font: 600 20px/1.6 var(--font-head);
-  letter-spacing: 0.12em;
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--haze);
 }
 .footNav {
   display: flex;
