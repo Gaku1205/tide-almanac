@@ -1,0 +1,217 @@
+.chart {
+  margin: 0;
+  width: 100%;
+}
+.night {
+  --ink: var(--tide);
+  --dark: rgba(3, 9, 16, 0.55);
+  --twi: rgba(124, 196, 207, 0.07);
+  --grid: rgba(244, 241, 232, 0.08);
+  --label: var(--moon);
+  --sub: var(--haze);
+}
+.paper {
+  --ink: var(--tide-deep);
+  --dark: rgba(28, 36, 48, 0.07);
+  --twi: rgba(226, 80, 47, 0.06);
+  --grid: rgba(28, 36, 48, 0.09);
+  --label: var(--sumi);
+  --sub: var(--sumi-soft);
+}
+.plot {
+  position: relative;
+  width: 100%;
+}
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.dark {
+  fill: var(--dark);
+}
+.twilight {
+  fill: var(--twi);
+}
+.grid {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+.jiai {
+  fill: var(--shu);
+  opacity: 0.16;
+}
+.jiaiTop {
+  fill: var(--shu);
+}
+.tideInk {
+  color: var(--ink);
+}
+.tideInk {
+  clip-path: inset(0 100% 0 0);
+  animation: reveal 1.6s cubic-bezier(0.6, 0.1, 0.2, 1) 0.15s forwards;
+}
+.line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+}
+@keyframes reveal {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.ext {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 10px));
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--label);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.ext b {
+  font: 700 14px/1 var(--font-head);
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  margin-bottom: 4px;
+}
+.low {
+  transform: translate(-50%, 12px);
+}
+.low b {
+  order: 3;
+  margin: 4px 0 0;
+}
+.cm {
+  color: var(--sub);
+  font-size: 12px;
+}
+.alignL {
+  transform: translate(0, calc(-100% - 10px));
+  justify-items: start;
+}
+.alignR {
+  transform: translate(-100%, calc(-100% - 10px));
+  justify-items: end;
+}
+.low.alignL {
+  transform: translate(0, 12px);
+}
+.low.alignR {
+  transform: translate(-100%, 12px);
+}
+
+.jiaiTag {
+  position: absolute;
+  top: 12px;
+  transform: translateX(-50%);
+  background: var(--shu-fill);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dashed var(--label);
+  opacity: 0.9;
+}
+.nowDot {
+  position: absolute;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--label);
+  box-shadow: 0 0 0 0 rgba(244, 241, 232, 0.5);
+  animation: pulse 2.4s ease-out infinite;
+}
+.paper .nowDot {
+  box-shadow: 0 0 0 0 rgba(28, 36, 48, 0.35);
+}
+.nowTag {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  font-size: 12px;
+  color: var(--label);
+  white-space: nowrap;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(244, 241, 232, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(244, 241, 232, 0);
+  }
+}
+
+.axis {
+  position: relative;
+  height: 50px;
+  margin-top: 8px;
+  border-top: 1px solid var(--grid);
+  color: var(--sub);
+  font-size: 12px;
+}
+.axis > span {
+  position: absolute;
+  top: 6px;
+  transform: translateX(-50%);
+}
+.axis > span:first-child {
+  transform: none;
+}
+.axis > span:nth-child(9) {
+  transform: translateX(-100%);
+}
+.sun {
+  top: 28px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--label);
+  white-space: nowrap;
+}
+.sun i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--shu);
+}
+.sunSet i {
+  background: transparent;
+  border: 1.5px solid var(--shu);
+}
+
+@media (max-width: 640px) {
+  .axis > span:nth-child(even):not(.sun) {
+    display: none;
+  }
+  .ext {
+    font-size: 12px;
+  }
+  .cm {
+    display: none;
+  }
+}

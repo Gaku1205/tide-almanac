@@ -1,0 +1,39 @@
+.waves {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--tide);
+  opacity: 0.16;
+}
+.paper {
+  color: var(--tide-deep);
+  opacity: 0.12;
+}
+.waves svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+}
+.waves path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  animation: drift linear infinite;
+}
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1440px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .waves path {
+    animation: none;
+  }
+}

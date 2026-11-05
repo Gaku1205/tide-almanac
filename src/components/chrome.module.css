@@ -1,0 +1,129 @@
+/* 上の帯と下の帯 */
+.header {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  color: var(--moon);
+}
+.onPaper {
+  color: var(--sumi);
+}
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+}
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  min-height: 44px;
+}
+.word {
+  display: grid;
+  font: 500 17px/1.1 var(--font-num);
+  letter-spacing: 0.02em;
+}
+.word small {
+  font: 600 11px/1.4 var(--font-head);
+  letter-spacing: 0.4em;
+  opacity: 0.75;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vw, 32px);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+.nav a {
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.nav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.pill {
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.nav a.pill:hover {
+  text-decoration: none;
+  background: var(--moon);
+  color: var(--night);
+}
+.onPaper .nav a.pill:hover {
+  background: var(--sumi);
+  color: var(--paper);
+}
+@media (max-width: 560px) {
+  .hideSm {
+    display: none !important;
+  }
+  .word small {
+    letter-spacing: 0.25em;
+  }
+}
+
+.footer {
+  background: var(--night-deep);
+  color: var(--haze);
+  padding: 72px 0 56px;
+  font-size: 14px;
+}
+.footGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px 64px;
+}
+.footBrand {
+  color: var(--moon);
+}
+.footBrand p {
+  margin: 18px 0 0;
+  font: 600 20px/1.6 var(--font-head);
+  letter-spacing: 0.12em;
+}
+.footNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  align-content: start;
+  justify-content: flex-end;
+}
+.footNav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--moon);
+}
+.footNav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.footNote {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--night-line);
+  line-height: 1.9;
+}
+.footNote span {
+  display: block;
+  max-width: 64em;
+}
+@media (max-width: 720px) {
+  .footGrid {
+    grid-template-columns: 1fr;
+  }
+  .footNav {
+    justify-content: flex-start;
+  }
+}

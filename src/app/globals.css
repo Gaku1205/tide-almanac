@@ -1,10 +1,161 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+/* tide-almanac の土台。色・文字は docs/design.md の表と同じ名前 */
+:root {
+  --night: #0b1a2a;
+  --night-deep: #07111c;
+  --night-line: #1e3247;
+  --paper: #eee7d7;
+  --paper-shade: #e2d8c3;
+  --sumi: #1c2430;
+  --sumi-soft: #56606c;
+  --tide: #7cc4cf;
+  --tide-deep: #1f6e7a;
+  --shu: #e2502f;
+  --shu-deep: #b83a1e;
+  --shu-fill: #c9441f;
+  --shu-fill-hover: #a9381a;
+  --moon: #f4f1e8;
+  --haze: #9aa8b6;
+
+  --font-head: var(--font-mincho), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: var(--font-gothic), "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --font-num: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --gutter: clamp(20px, 5vw, 64px);
+  --max: 1280px;
+  --radius: 20px;
 }
 
-.container {
-  max-width: 720px;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--moon);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.8;
+  font-feature-settings: "palt" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--shu);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: calc(var(--max) + var(--gutter) * 2);
   margin: 0 auto;
-  padding: 48px 20px;
+  padding: 0 var(--gutter);
+}
+
+.num {
+  font-family: var(--font-num);
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ボタン（どの画面でも同じ形） */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 999px;
+  font: 500 15px/1 var(--font-body);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btnShu {
+  background: var(--shu-fill);
+  color: #fff;
+}
+.btnShu:hover {
+  background: var(--shu-fill-hover);
+}
+.btnGhost {
+  border-color: rgba(244, 241, 232, 0.4);
+  color: var(--moon);
+  background: transparent;
+}
+.btnGhost:hover {
+  border-color: var(--moon);
+}
+.btnInk {
+  border-color: var(--sumi);
+  color: var(--sumi);
+  background: transparent;
+}
+.btnInk:hover {
+  background: var(--sumi);
+  color: var(--paper);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.arrow {
+  font-family: var(--font-num);
+  transition: transform 0.2s;
+}
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
