@@ -1,14 +1,11 @@
 // 通知の1回分の実行。選び方（planRun）は純粋な関数、DB とメールの出入りは Io に分ける（テストは notify-run.test.ts）
-import { HOUR, MINUTE, startOfJstDay } from "./almanac";
+import { HOUR, startOfJstDay } from "./almanac";
 import { isPro, type SubscriptionRow } from "./billing";
 import { sendMail } from "./mailer";
 import { notificationMail } from "./notification-mail";
-import { planNotifications, type Notification, type NotificationSettings } from "./notifications";
+import { EVENING_HOUR, planNotifications, type Notification, type NotificationSettings } from "./notifications";
 import { SPOTS } from "./spots";
 import { supabaseAdmin } from "./supabase/admin";
-
-/** cron の間隔。前回の実行は、今回のこの分だけ前とみなす */
-export const RUN_INTERVAL_MIN = 15;
 
 export type RunUser = {
   id: string;
@@ -22,10 +19,15 @@ export type RunUser = {
 
 export type Due = { userId: string; email: string; notification: Notification };
 
-/** 送る通知を選ぶ。無料の会員・宛先の無い会員・設定が off の種類は含めない。送る時刻が [now-間隔, now) の物だけ */
+/**
+ * 送る通知を選ぶ。無料の会員・宛先の無い会員・設定が off の種類は含めない。
+ * cron は1日1回（21時台のどこかで動く）なので、範囲は日で決める：
+ * 「前の晩」の通知（jiai-evening・low-tide）のうち、送る時刻が今日の 21:00 JST 以降・今回以前の物だけ。
+ * 90分前の通知（jiai-before）は送らない。
+ */
 export function planRun(users: readonly RunUser[], now: number): Due[] {
-  const from = now - RUN_INTERVAL_MIN * MINUTE;
   const today = startOfJstDay(now);
+  const from = today + EVENING_HOUR * HOUR;
   const out: Due[] = [];
   for (const u of users) {
     if (!u.email || !isPro(u.subscription, new Date(now))) continue;
@@ -33,11 +35,9 @@ export function planRun(users: readonly RunUser[], now: number): Due[] {
     for (const id of u.spotIds) {
       const spot = SPOTS.find((s) => s.id === id);
       if (!spot) continue;
-      // 90分前の通知は日付をまたぐことがあるので、今日と明日の両方を見る
-      for (const date of [today, today + 24 * HOUR]) {
-        for (const n of planNotifications(spot, date, u.settings, from)) {
-          if (n.sendAt < now) out.push({ userId: u.id, email: u.email, notification: n });
-        }
+      // 知らせる日は「明日」。その前の晩（今日）21:00 JST の通知だけを見る
+      for (const n of planNotifications(spot, today + 24 * HOUR, u.settings, from)) {
+        if (n.kind !== "jiai-before" && n.sendAt <= now) out.push({ userId: u.id, email: u.email, notification: n });
       }
     }
   }

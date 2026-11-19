@@ -55,9 +55,9 @@
   - 干潮の通知：`date` の 0時〜正午の干潮（`extremes`）の潮位がしきい値を**下回る**（同じ値は含まない）とき、前の晩21時に1通
   - 設定が off の種類は返さない。送る時刻が `now` より前の物も返さない。結果は送る時刻の早い順
 - 送信の決まり（メールだけ。`src/lib/notify-run.ts`・`src/lib/mailer.ts`・`src/lib/notification-mail.ts`）
-  - 定期実行：`vercel.json` の cron が毎日 21:00（日本時間。cron は UTC で `0 12 * * *`）に `GET /api/notify` を呼ぶ。Vercel の無料プラン（Hobby）は cron が1日1回までで、15 分おきにすると公開そのものが断られるため。いまは前の晩21時の通知だけが送られ、時合いの90分前の通知は送られない（送るには、15 分おきに呼ぶ別の仕組みが要る）。`Authorization: Bearer ${CRON_SECRET}` が合わなければ 401。`CRON_SECRET`・`EMAIL_API_KEY`・`EMAIL_FROM`・Supabase の鍵のどれかが無いときは、何もせず 200（`{ skipped: true }`）で終わる
+  - 定期実行：`vercel.json` の cron が毎日 21:00（日本時間。cron は UTC で `0 12 * * *`）に `GET /api/notify` を呼ぶ。Vercel の無料プラン（Hobby）は cron が1日1回までで、15 分おきにすると公開そのものが断られるため。Hobby の cron は決めた時刻ちょうどではなく、その1時間のうち（21:00〜21:59）のどこかで動くことがある。いまは前の晩21時の通知だけが送られ、時合いの90分前の通知は送られない（送るには、15 分おきに呼ぶ別の仕組みが要る）。`Authorization: Bearer ${CRON_SECRET}` が合わなければ 401。`CRON_SECRET`・`EMAIL_API_KEY`・`EMAIL_FROM`・Supabase の鍵のどれかが無いときは、何もせず 200（`{ skipped: true }`）で終わる
   - 対象：`notification_settings` で on の種類がある会員のうち、**いま有料**の会員（`subscriptions` 表と `isPro`）。無料に戻った会員には送らない（保存済みの設定は消さない）。地点は会員が `saved_spots` に登録した全地点
-  - 選び方：今日と明日（JST 0時）それぞれで `planNotifications` を呼び、送る時刻が「前回の実行から今回まで」（今回の 15 分前以上・今回より前）の物だけ送る。90 分前の通知は日付をまたぐことがあるので、今日の分も見る
+  - 選び方：呼ばれた時刻（`now`）の日（JST）の「明日」の `date` で `planNotifications` を呼び、そのうち「前の晩」の通知（`jiai-evening`・`low-tide`）で、送る時刻が「今日の 21:00 JST 以降、`now` 以前」の物だけ送る。呼ばれるのが 21:00〜21:59 のどこでも同じ物が選ばれる。90 分前の通知（`jiai-before`）は、呼ばれる時刻によらず選ばない。同じ日に2回呼ばれても、下の二重送信の防止で2通目は送られない
   - 二重送信の防止：送る前に `public.notification_log` 表（`supabase/migrations/0004_notification_log.sql`）へ `(user_id, spot_id, kind, send_at)` を書く。一意制約に当たった（もう書いてある）物は送らない。送るのに失敗したら記録を消す。この表は `supabaseAdmin()` だけが読み書きする（RLS 有効、一般の policy なし）
   - 宛先は会員のメールアドレス（`auth.users`）。配信は Resend の HTTP API（`EMAIL_API_KEY`・`EMAIL_FROM`）。件名と本文は日本語で、潮位には「推算値」と書き添える
 
