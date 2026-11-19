@@ -3,6 +3,7 @@ import Link from "next/link";
 import { hm, jpDay, type DayAlmanac } from "@/lib/almanac";
 import { rankSpots } from "@/lib/home";
 import { SPOTS } from "@/lib/spots";
+import { strengthOf } from "@/lib/strength";
 import { addSpot, removeSpot } from "@/app/mine/actions";
 import { CompareTable } from "./CompareTable";
 import { TideChart } from "./TideChart";
@@ -129,9 +130,7 @@ export function DayBlock({ a, now }: { a: DayAlmanac; now: number }) {
               {hm(w.start)}–{hm(w.end)}
             </span>
             <span className={s.wWhy}>{w.reason}</span>
-            <span className={s.wScore}>
-              強さ <b className="num">{w.score}</b>
-            </span>
+            <span className={s.wScore}>{strengthOf(w.score)}</span>
           </li>
         ))}
       </ul>

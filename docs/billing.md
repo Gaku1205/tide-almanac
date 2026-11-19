@@ -36,5 +36,8 @@
 | `STRIPE_PRICE_ID` | 月額の値段 |
 | `STRIPE_WEBHOOK_SECRET` | 通知の署名を確かめる鍵 |
 | `STRIPE_PORTAL_CONFIG` | Stripe の会員ページの設定 |
+| `CRON_SECRET` | 通知の定期実行（`/api/notify`）を呼ぶ人を確かめる合言葉。合わないと 401。無いと何もせず終わる |
+| `EMAIL_API_KEY` | 通知メールを送る Resend の鍵（`src/lib/mailer.ts`）。無いと通知は送られず、何もせず終わる |
+| `EMAIL_FROM` | 通知メールの差出人の住所（Resend で使える物）。無いと通知は送られず、何もせず終わる |
 
 本物の課金に切り替えるのは人間の作業です（Stripe の本人確認・口座、特定商取引法に基づく表記・利用規約・プライバシーポリシーのページ、本番の鍵への差し替え）。
