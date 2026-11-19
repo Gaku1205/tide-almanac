@@ -106,7 +106,7 @@
   font-feature-settings: "tnum" 1;
 }
 .field input::placeholder {
-  color: #8a8578;
+  color: var(--sumi-soft);
 }
 .field input:focus {
   outline: none;
@@ -140,7 +140,7 @@
   padding: 10px 14px;
   border-radius: 10px;
   background: rgba(184, 58, 30, 0.1);
-  color: #8f2a13;
+  color: var(--shu-deep);
   font-size: 14px;
 }
 .note {
